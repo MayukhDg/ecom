@@ -3,11 +3,14 @@
 import { Global_Context } from '@/context/Context';
 import React, { useEffect, useState, useContext } from 'react';
 import Link from 'next/link';
+import { useSession, signIn, signOut } from "next-auth/react"
+
 
 const Navbar = () => {
  
     const { categories, setCategories,selectedCategory, setSelectedCategory } = useContext(Global_Context);    
-    
+    const { data: session, status } = useSession()
+     const userEmail = session?.user?.email
     
     useEffect(()=>{
         const fetchCategories = async()=>{
@@ -28,6 +31,7 @@ fetchCategories().then(data=>setCategories(data));
       )) }   
      </ul>
      <h3 className='text-zinc-200' >
+     { status==="authenticated"? <button onClick={() => signOut()}>Sign out</button>:<button onClick={() => signIn("github")}>Sign in</button>}
       <Link href="/cart" >Cart</Link>
      </h3>
     </nav>
